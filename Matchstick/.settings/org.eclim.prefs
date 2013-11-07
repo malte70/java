@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+org.eclim.java.import.exclude=["^com.sun..*","^sunw?..*"]
+org.eclim.java.run.mainclass=Matchstick
+org.eclim.user.email=malte70@malte70.de
+org.eclim.user.name=Malte Bublitz
