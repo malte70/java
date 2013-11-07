@@ -1,3 +1,5 @@
+package de.malte_bublitz.itc.scannerdemo;
+
 import java.util.Scanner;
 
 public class ScannerDemo {

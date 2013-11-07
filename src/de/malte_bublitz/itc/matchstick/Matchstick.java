@@ -1,4 +1,4 @@
-package de.malte70.itc.matchstick;
+package de.malte_bublitz.itc.matchstick;
 /*
  * Matchstick
  *
@@ -22,6 +22,25 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Matchstick {
+	private static void ansiEscape(String code) {
+		char ESC = 27;
+		System.out.print(ESC + "[" + code);
+	}
+	private static void ansiClear() {
+		ansiEscape("H");
+		ansiEscape("2J");
+	}
+	private static void ansiColor(String colorName) {
+		if (colorName.equals("BLACK")) {
+			ansiEscape("0;30m");
+		} else if (colorName.equals("RED")) {
+			ansiEscape("0;31m");
+		} else if (colorName.equals("GREEN")) {
+			ansiEscape("0;32m");
+		} else if (colorName.equals("YELLOW")) {
+			ansiEscape("0;33m");
+		}
+	}
 	public static int randInt() {
 		Random rand = new Random();
 		// returns a number beween 0 (inclusive) and argument (exclusive)

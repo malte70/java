@@ -1,3 +1,5 @@
+package de.malte_bublitz.itc.forloop;
+
 public class ForLoop {
 	public static void simpleLoop() {
 		/*

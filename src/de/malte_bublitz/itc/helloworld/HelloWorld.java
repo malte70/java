@@ -1,3 +1,4 @@
+package de.malte_bublitz.itc.helloworld;
 
 public class HelloWorld {
 	public static void main(String[] args) {
