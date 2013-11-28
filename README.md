@@ -6,7 +6,7 @@ Various Java programs, written for OOP at university
 Compiling
 ---------
 
-    cd src && make
+    make -C src all
 
 Utility Classes
 ---------------
