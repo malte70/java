@@ -21,14 +21,14 @@ public class Main {
 		bibliothek.remove(bibliothek.indexOf(b));
 	}
 	public static final void main(String[] args) {
+		Buch nguygen_linux_filesystem_hierarchy = new Buch("Binh Nguyen", "Linux Filesystem Hierarchy", 2004);
 		bibliothek.add(new Buch("Mendel Cooper", "Advanced Bash-Scripting Guide", 2012));
 		bibliothek.add(new Buch("Machtelt Garrels", "Bash Guide for Beginners", 2008));
 		bibliothek.add(new Buch("Gareth Anderson", "GNU/Linux Command-Line Tools Summary", 2006));
-		bibliothek.add(new Buch("Binh Nguyen", "Linux Filesystem Hierarchy", 2004));
+		bibliothek.add(nguygen_linux_filesystem_hierarchy);
 		bibliothek.add(new Buch("Gerard Beekmans", "Hardened Linux From Scratch", 2011));
 		System.out.println("Anzahl Bücher: "+getAnzahlBuecher());
 		System.out.print("Ist Linux Filesystem Hierarchy von B. Nguyen in der Bibliothek? ");
-		Buch nguygen_linux_filesystem_hierarchy = new Buch("Binh Nguyen", "Linux Filesystem Hierarchy", 2004);
 		if (istInBibliothek(nguygen_linux_filesystem_hierarchy)) {
 			System.out.println("ja.");
 		} else {
