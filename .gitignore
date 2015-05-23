@@ -6,3 +6,4 @@
 *.ear
 META-INF*
 Makefile
+src/de/malte_bublitz/util

@@ -53,12 +53,21 @@ else
 	exit 1
 fi
 
-echo -n "Checking for de.malte_bublitz.util.ANSIConsole... "
+echo -n "Checking for de.malte_bublitz.util.ANSIConsole in src/... "
 if [[ -f $SRCDIR/de/malte_bublitz/util/ANSIConsole.java ]]
 then
 	echo "Found."
 else
-	echo "Not found!" >&2
+	echo "Not found."
+	echo -n "Checking for de.malte_bublitz.util.ANSIConsole in lib/... "
+	if [[ -f $DIR/lib/malte70_java-util/src/de/malte_bublitz/util/ANSIConsole.java ]]
+	then
+		ln -s $DIR/lib/malte70_java-util/src/de/malte_bublitz/util $SRCDIR/de/malte_bublitz/util
+		echo "Found. Created symlink in src/"
+	else
+		echo "Not found!"
+		echo "Did you check out the git submodules (see README.md for details)?"
+	fi
 fi
 
 cd $SRCDIR
