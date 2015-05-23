@@ -1,0 +1,151 @@
+#!/bin/sh
+#
+# configure
+#    part of malte70/java
+#
+# Copyright (c) 2015 Malte Bublitz
+#
+
+DIR="$(dirname $(realpath $0))"
+SRCDIR="$DIR/src/"
+
+cat <<EOF
+
+configure script for malte70/java
+
+EOF
+
+echo -n "Checking for operating system... "
+uname -o
+
+echo -n "Checking for CPU architecture... "
+uname -m
+
+echo -n "Checking for java... "
+
+if which java &>/dev/null
+then
+	JAVA=$(which java)
+	echo $JAVA
+else
+	echo "java executable not found in PATH!" >&2
+	exit 1
+fi
+
+echo -n "Checking for javac... "
+if which javac &>/dev/null
+then
+	JAVAC=$(which javac)
+	echo $JAVAC
+else
+	echo "javac executable not found in PATH!" >&2
+	exit 1
+fi
+
+
+echo -n "Checking for jar... "
+if which jar &>/dev/null
+then
+	JAR=$(which jar)
+	echo $JAR
+else
+	echo "jar executable not found in PATH!" >&2
+	exit 1
+fi
+
+echo -n "Checking for de.malte_bublitz.util.ANSIConsole... "
+if [[ -f $SRCDIR/de/malte_bublitz/util/ANSIConsole.java ]]
+then
+	echo "Found."
+else
+	echo "Not found!" >&2
+fi
+
+cd $SRCDIR
+echo "Checking for packages to build..."
+PACKAGES=$(find de/malte_bublitz/itc -maxdepth 1 -mindepth 1 | tr / .)
+for pkg in $PACKAGES
+do
+	echo " - $pkg"
+done
+
+echo
+echo -n "Generating Makefile..."
+
+
+echo
+
+
+TARGETS_SRC=$(echo $PACKAGES | sed 's/de.malte_bublitz.itc.//g;s/ /_src /g;s/$/_src/')
+TARGETS_JAR=$(find de/malte_bublitz/itc -mindepth 2 -maxdepth 2 -exec grep -l 'static void main' '{}' \; | tr / . | sed 's/de.malte_bublitz.itc.//g;s/.java/.jar/g' | tr "\n" " ")
+
+cat <<EOF >../Makefile
+all:
+	@make -s -C src all
+	
+clean:
+	@make -s -C src clean
+	
+clean-all:
+	@make -s -C src clean-all
+	
+EOF
+(
+cat <<EOF
+all: sources jars
+	
+sources: $TARGETS_SRC
+	
+jars: $TARGETS_JAR
+	
+EOF
+
+for target in $TARGETS_SRC
+do
+	echo "$target: $(ls -1 de/malte_bublitz/itc/$(echo $target | sed 's/_src//g')/*.java | tr "\n" " ")"
+	for java_file in $(ls -1 de/malte_bublitz/itc/$(echo $target | sed 's/_src//g')/*.java)
+	do
+		class_file=${java_file%.*}.class
+		echo "	@echo \"[JAVAC]   $(echo $java_file | sed 's@src/@@g;s@.java@@' | tr / .)\""
+		echo "	@test -f $class_file || javac $java_file"
+	done
+	echo "	"
+done
+
+for target in $TARGETS_JAR
+do
+	echo "$target: $(echo $target | cut -d. -f1 | sed 's/$/_src/g')" #find de/malte_bublitz/itc/$(echo $target | cut -d. -f1) -iname "*.class" | tr "\n" " ")"
+	echo "	@echo \"[JAR]     $target\""
+	echo "	@mkdir META-INF"
+	echo "	@echo \"Main-Class: de.malte_bublitz.itc.$(echo $target | sed 's/.jar//')\" > META-INF/MANIFEST.mf"
+	echo -n "	@jar cfm ../bin/$target META-INF/MANIFEST.mf de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.class"
+	if grep "ANSIConsole" de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.java &>/dev/null
+	then
+		echo " de/malte_bublitz/util/ANSIConsole.class"
+	else
+		echo ""
+	fi
+	echo "	@rm -rf META-INF"
+	echo "	"
+done
+cat <<EOF
+clean:
+	@echo "[CLEAN]"
+	@find . -iname "*.class" -exec rm '{}' \;
+	@rm -rf META-INF
+	
+clean-all:
+	@make -s clean >/dev/null
+	@echo "[CLEAN-ALL]"
+	@rm Makefile
+	
+EOF
+) >Makefile
+cat <<EOF
+Done.
+
+Now run
+  make # or gmake on FreeBSD
+to compile everything and build the JAR files.
+
+EOF
