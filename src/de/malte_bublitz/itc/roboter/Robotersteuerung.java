@@ -17,10 +17,10 @@ public class Robotersteuerung {
 		Scanner sc = new Scanner(System.in);
 		String input;
 		c.clear();
-		c.setForegroundColor("GREEN");
+		c.setForegroundColor(ANSIConsole.COLOR_GREEN);
 		c.println("Status");
 		c.printLine("=", 20);
-		c.setAttribute("RESET");
+		c.setAttribute(ANSIConsole.ATTR_RESET);
 		c.println("");
 		c.println("Position: ("+robby.getX()+"|"+robby.getY()+")");
 		c.println("Blickrichtung: "+robby.getRichtung().toString());
@@ -48,9 +48,9 @@ public class Robotersteuerung {
 			} else if (input.equals("exit")) {
 				beenden = true;
 			} else {
-				c.setForegroundColor("RED");
+				c.setForegroundColor(ANSIConsole.COLOR_RED);
 				c.println("Illegal command.");
-				c.setAttribute("RESET");
+				c.setAttribute(ANSIConsole.ATTR_RESET);
 			}
 		} catch (java.util.NoSuchElementException e) {
 			beenden = true;

@@ -85,23 +85,23 @@ public class Konto {
 			// Ausgabe
 			c.print(df.format(rs.getDate(1)) + " | ");
 			if (rs.getInt(2)<0)
-				c.setForegroundColor("RED");
+				c.setForegroundColor(ANSIConsole.COLOR_RED);
 			else
-				c.setForegroundColor("GREEN");
+				c.setForegroundColor(ANSIConsole.COLOR_GREEN);
 			System.out.format(
 					"%9.2f",
 					(double)rs.getInt(2)
 					);
-			c.setAttribute("RESET");
+			c.setAttribute(ANSIConsole.ATTR_RESET);
 			c.print(" | ");
 			if (saldo < 0)
-				c.setForegroundColor("RED");
+				c.setForegroundColor(ANSIConsole.COLOR_RED);
 			System.out.format(
 					"%9.2f",
 					saldo
 					);
 			if (saldo < 0)
-				c.setAttribute("RESET");
+				c.setAttribute(ANSIConsole.ATTR_RESET);
 			c.println(" | Buchung");
 			// neue zinszahl berechnen
 			zinszahl += (
