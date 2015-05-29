@@ -6,7 +6,7 @@
 # Copyright (c) 2015 Malte Bublitz
 #
 
-DIR="$(dirname $(realpath $0))"
+DIR="$(dirname $PWD/$0)"
 SRCDIR="$DIR/src/"
 
 cat <<EOF
@@ -15,13 +15,13 @@ configure script for malte70/java
 
 EOF
 
-echo -n "Checking for operating system... "
-uname -o
+printf "Checking for operating system... "
+uname -o 2>/dev/null || uname -s
 
-echo -n "Checking for CPU architecture... "
+printf "Checking for CPU architecture... "
 uname -m
 
-echo -n "Checking for java... "
+printf "Checking for java... "
 
 if which java &>/dev/null
 then
@@ -32,7 +32,7 @@ else
 	exit 1
 fi
 
-echo -n "Checking for javac... "
+printf "Checking for javac... "
 if which javac &>/dev/null
 then
 	JAVAC=$(which javac)
@@ -42,8 +42,7 @@ else
 	exit 1
 fi
 
-
-echo -n "Checking for jar... "
+printf "Checking for jar... "
 if which jar &>/dev/null
 then
 	JAR=$(which jar)
@@ -53,13 +52,17 @@ else
 	exit 1
 fi
 
-echo -n "Checking for de.malte_bublitz.util.ANSIConsole in src/... "
+printf "Checking for Java version... "
+JAVA_VERSION=$(java -version 2>&1 | grep version | cut -d\" -f2)
+echo $JAVA_VERSION
+
+printf "Checking for de.malte_bublitz.util.ANSIConsole in src/... "
 if [[ -f $SRCDIR/de/malte_bublitz/util/ANSIConsole.java ]]
 then
 	echo "Found."
 else
 	echo "Not found."
-	echo -n "Checking for de.malte_bublitz.util.ANSIConsole in lib/... "
+	printf "Checking for de.malte_bublitz.util.ANSIConsole in lib/... "
 	if [[ -f $DIR/lib/malte70_java-util/src/de/malte_bublitz/util/ANSIConsole.java ]]
 	then
 		ln -s $DIR/lib/malte70_java-util/src/de/malte_bublitz/util $SRCDIR/de/malte_bublitz/util
@@ -79,7 +82,7 @@ do
 done
 
 echo
-echo -n "Generating Makefile..."
+printf "Generating Makefile..."
 
 
 echo
@@ -127,7 +130,7 @@ do
 	echo "	@echo \"[JAR]     $target\""
 	echo "	@mkdir META-INF"
 	echo "	@echo \"Main-Class: de.malte_bublitz.itc.$(echo $target | sed 's/.jar//')\" > META-INF/MANIFEST.mf"
-	echo -n "	@jar cfm ../bin/$target META-INF/MANIFEST.mf de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.class"
+	printf "	@jar cfm ../bin/$target META-INF/MANIFEST.mf de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.class"
 	if grep "ANSIConsole" de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.java &>/dev/null
 	then
 		echo " de/malte_bublitz/util/ANSIConsole.class"
