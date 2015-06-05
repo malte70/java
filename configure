@@ -119,7 +119,7 @@ do
 	do
 		class_file=${java_file%.*}.class
 		echo "	@echo \"[JAVAC]   $(echo $java_file | sed 's@src/@@g;s@.java@@' | tr / .)\""
-		echo "	@test -f $class_file || javac $java_file"
+		echo "	@javac $java_file"
 	done
 	echo "	"
 done
