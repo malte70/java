@@ -27,22 +27,16 @@ public class GrussAusgabe2
 			c.println("Unterstützte Herkunften: Frankreich, Deutschland, Bayern, Schwaben, Italien");
 			c.print("Herkunft? ");
 			herkunft = sc.nextLine();
-			switch (herkunft) {
-				case "Frankreich":
-					allepersonen[i] = new Franzose(name);
-					break;
-				case "Deutschland":
-					allepersonen[i] = new Deutscher(name);
-					break;
-				case "Bayern":
-					allepersonen[i] = new Bayer(name);
-					break;
-				case "Schwaben":
-					allepersonen[i] = new Schwabe(name);
-					break;
-				case "Italien":
-					allepersonen[i] = new Italiener(name);
-					break;
+			if (herkunft.equals("Frankreich")) {
+				allepersonen[i] = new Franzose(name);
+			} else if (herkunft.equals("Deutschland")) {
+				allepersonen[i] = new Deutscher(name);
+			} else if (herkunft.equals("Bayern")) {
+				allepersonen[i] = new Bayer(name);
+			} else if (herkunft.equals("Schwaben")) {
+				allepersonen[i] = new Schwabe(name);
+			} else if (herkunft.equals("Italien")) {
+				allepersonen[i] = new Italiener(name);
 			}
 			c.println("Danke.");
 			i++;
