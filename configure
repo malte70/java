@@ -142,14 +142,16 @@ do
 done
 cat <<EOF
 clean:
-	@echo "[CLEAN]"
+	@echo "[CLEAN] *.class"
 	@find . -iname "*.class" -exec rm '{}' \;
 	@rm -rf META-INF
 	
 clean-all:
-	@make -s clean >/dev/null
-	@echo "[CLEAN-ALL]"
-	@rm Makefile
+	@make -s clean
+	@echo "[CLEAN] Makefile"
+	@rm -f ../Makefile
+	@echo "[CLEAN] src/Makefile"
+	@rm -f Makefile
 	
 EOF
 ) >Makefile
