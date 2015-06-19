@@ -1,7 +1,7 @@
-CREATE TABLE konto;
-USE konto;
-CREATE USER konto@localhost;
-GRANT ALL PRIVILEGES ON konto.* TO konto@localhost IDENTIFIED BY "9767";
+CREATE DATABASE itc_java_konto;
+USE itc_java_konto;
+CREATE USER itc@localhost;
+GRANT ALL PRIVILEGES ON `itc\_%`.* TO itc@localhost IDENTIFIED BY "9767";
 CREATE TABLE buchungen (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	kontonr VARCHAR(9) NOT NULL,

@@ -1,5 +1,7 @@
 package de.malte_bublitz.itc.kontoauszug;
 
+import de.malte_bublitz.itc.kontoauszug.Config;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -43,9 +45,6 @@ public class Konto {
 		Connection  con       = null;
 		PreparedStatement st  = null;
 		ResultSet   rs        = null;
-		String      url       = "jdbc:mysql://gallifrey.tardis.malte-bublitz.de:3306/konto";
-		String      user      = "konto";
-		String      password  = "9767";
 		Date        d         = new Date();
 		DateFormat  df        = new SimpleDateFormat("yyyy-MM-dd");
 		DateFormat  df_day    = new SimpleDateFormat("dd");
@@ -57,7 +56,7 @@ public class Konto {
 		double      saldo     = 0.0;
 		double      zinsen    = 0.0;
 		double      zinszahl  = 0.0;
-		con = DriverManager.getConnection(url, user, password);
+		con = DriverManager.getConnection(Config.url, Config.user, Config.password);
 		st = con.prepareStatement("SELECT datum,betrag FROM buchungen WHERE kontonr=? ORDER BY datum");
 		st.setString(1, kontonr);
 		rs = st.executeQuery();
@@ -122,10 +121,7 @@ public class Konto {
 	private void syncDatabase() throws SQLException {
 		Connection con     = null;
 		PreparedStatement st       = null;
-		String    url      = "jdbc:mysql://gallifrey.tardis.malte-bublitz.de:3306/konto";
-		String    user     = "konto";
-		String    password = "9767";
-		con = DriverManager.getConnection(url, user, password);
+		con = DriverManager.getConnection(Config.url, Config.user, Config.password);
 		st = con.prepareStatement("UPDATE konten SET inhaber=?, zinssatz=? WHERE id=?");
 		st.setString(1, inhaber);
 		st.setInt(2, zinssatz);
@@ -137,10 +133,7 @@ public class Konto {
 	public static Konto neuesKontoFactory(String kontonr, String inhaber, int zinssatz) throws SQLException {
 		Connection con     = null;
 		PreparedStatement st       = null;
-		String    url      = "jdbc:mysql://localhost/konto";
-		String    user     = "konto";
-		String    password = "9767";
-		con = DriverManager.getConnection(url, user, password);
+		con = DriverManager.getConnection(Config.url, Config.user, Config.password);
 		st = con.prepareStatement("INSERT INTO konten VALUES (?, ?, ?)");
 		st.setString(1, kontonr);
 		st.setString(2, inhaber);
@@ -156,11 +149,7 @@ public class Konto {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
-		String url = "jdbc:mysql://gallifrey.tardis.malte-bublitz.de:3306/konto";
-		String user = "konto";
-		String password = "9767";
-		
-		con = DriverManager.getConnection(url, user, password);
+		con = DriverManager.getConnection(Config.url, Config.user, Config.password);
 		st = con.prepareStatement("SELECT id,inhaber,zinssatz FROM konten WHERE id=?");
 		st.setString(1, kontonr);
 		rs = st.executeQuery();
