@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # configure
 #    part of malte70/java
@@ -20,6 +20,19 @@ uname -o 2>/dev/null || uname -s
 
 printf "Checking for CPU architecture... "
 uname -m
+
+printf "Checking for GNU make... "
+if make --version 2>/dev/null | head -n1 | grep GNU &>/dev/null
+then
+	MAKE=$(which make)
+elif gmake --version | head -n1 | grep GNU &>/dev/null
+then
+	MAKE=$(which gmake)
+else
+	echo "Not found!"
+	exit 1
+fi
+echo $MAKE
 
 printf "Checking for java... "
 
@@ -92,18 +105,22 @@ TARGETS_SRC=$(echo $PACKAGES | sed 's/de.malte_bublitz.itc.//g;s/ /_src /g;s/$/_
 TARGETS_JAR=$(find de/malte_bublitz/itc -mindepth 2 -maxdepth 2 -exec grep -l 'static void main' '{}' \; | tr / . | sed 's/de.malte_bublitz.itc.//g;s/.java/.jar/g' | tr "\n" " ")
 
 cat <<EOF >../Makefile
+MAKE=$MAKE
+
 all:
-	@make -s -C src all
+	@\$(MAKE) -s -C src all
 	
 clean:
-	@make -s -C src clean
+	@\$(MAKE) -s -C src clean
 	
 clean-all:
-	@make -s -C src clean-all
+	@\$(MAKE) -s -C src clean-all
 	
 EOF
 (
 cat <<EOF
+JAVAC=$JAVAC -encoding UTF-8
+JAR=$JAR
 all: sources jars
 	
 sources: $TARGETS_SRC
@@ -119,7 +136,7 @@ do
 	do
 		class_file=${java_file%.*}.class
 		echo "	@echo \"[JAVAC]   $(echo $java_file | sed 's@src/@@g;s@.java@@' | tr / .)\""
-		echo "	@javac $java_file"
+		echo "	@\$(JAVAC) $java_file"
 	done
 	echo "	"
 done
@@ -130,7 +147,7 @@ do
 	echo "	@echo \"[JAR]     $target\""
 	echo "	@mkdir META-INF"
 	echo "	@echo \"Main-Class: de.malte_bublitz.itc.$(echo $target | sed 's/.jar//')\" > META-INF/MANIFEST.mf"
-	printf "	@jar cfm ../bin/$target META-INF/MANIFEST.mf de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.class"
+	printf "	@\$(JAR) cfm ../bin/$target META-INF/MANIFEST.mf de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.class"
 	if grep "ANSIConsole" de/malte_bublitz/itc/$(echo $target | cut -d. -f1)/*.java &>/dev/null
 	then
 		echo " de/malte_bublitz/util/ANSIConsole.class"
@@ -159,7 +176,7 @@ cat <<EOF
 Done.
 
 Now run
-  make # or gmake on FreeBSD
+  make
 to compile everything and build the JAR files.
 
 EOF
